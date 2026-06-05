@@ -75,6 +75,19 @@ module.exports.getAllOrders = (req, res) => {
 }
 
 
-
+module.exports.updateStatus = async (req, res) => {
+  try {
+    const { status } = req.body;
+    const order = await Order.findByIdAndUpdate(
+      req.params.id,
+      { status },
+      { new: true, runValidators: true }
+    );
+    if (!order) return res.status(404).json({ message: 'Order not found.' });
+    res.json(order);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+};
 
 

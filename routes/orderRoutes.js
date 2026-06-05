@@ -11,6 +11,9 @@ router.get("/my-orders", verify, orderController.getUserOrders)
 
 router.get("/all-orders", verify, verifyAdmin, orderController.getAllOrders);
 
+// PUT /orders/:id/status  — admin: update status
+router.put("/:id/status", verify, verifyAdmin, orderController.updateStatus);
+
 module.exports = router;
 
 
