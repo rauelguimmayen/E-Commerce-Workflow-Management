@@ -20,7 +20,8 @@ const productSchema = new mongoose.Schema({
         required: true,
     },
     image_url:  { 
-    type: String 
+    type: String,
+    default: null 
     },
     isActive: {
         type: Boolean,
