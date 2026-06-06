@@ -23,6 +23,16 @@ const productSchema = new mongoose.Schema({
     type: String,
     default: null 
     },
+    stock:      { 
+    type: Number, 
+    default: 0, 
+    min: 0 
+    },
+    is_featured:{ 
+    type: Boolean, 
+    default: false 
+    },
+    tags:       [{ type: String }],
     isActive: {
         type: Boolean,
         default: true

@@ -33,5 +33,8 @@ router.post("/search-by-name", productController.searchByName);
 // POST /products/search-by-price
 router.post("/search-by-price", productController.searchByPrice);
 
+// DELETE /products/:productId/delete
+router.delete("/:productId/delete", verify, verifyAdmin, productController.deleteProduct);
+
 module.exports = router;
 

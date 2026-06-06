@@ -18,8 +18,9 @@ module.exports.createProduct = (req, res) => {
         description: req.body.description,
         category: req.body.category,
         price: req.body.price,
-        image_url: req.body.image_url || undefined
-    });
+        image_url: req.body.image_url || undefined,
+        stock: req.body.stock || undefined
+        });
 
     return newProduct.save()
         .then(result => {
@@ -75,7 +76,8 @@ module.exports.updateProduct = (req, res) => {
     description: req.body.description,
     price: req.body.price,
     category: req.body.category,
-    image_url: req.body.image_url
+    image_url: req.body.image_url,
+    stock: req.body.stock
   }
   return Product.findByIdAndUpdate(req.params.productId, updatedProduct, { new: true, runValidators: true })
     .then(product => {
@@ -179,4 +181,15 @@ exports.searchByPrice = async (req, res, next) => {
 
     res.json({ products })
   .catch(error => errorHandler(error, req, res));
+};
+
+// DELETE /products/:productId/delete  — admin only
+exports.deleteProduct = async (req, res) => {
+  try {
+    const product = await Product.findByIdAndDelete(req.params.id);
+    if (!product) return res.status(404).json({ message: 'Product not found.' });
+    res.json({ message: 'Product deleted.' });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
 };
