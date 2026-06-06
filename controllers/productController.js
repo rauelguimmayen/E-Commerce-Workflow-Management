@@ -186,10 +186,10 @@ exports.searchByPrice = async (req, res, next) => {
 // DELETE /products/:productId/delete  — admin only
 exports.deleteProduct = async (req, res) => {
   try {
-    const product = await Product.findByIdAndDelete(req.params.id);
-    if (!product) return res.status(404).json({ message: 'Product not found.' });
-    res.json({ message: 'Product deleted.' });
+    const product = await Product.findByIdAndDelete(req.params.productId)  // ← was req.params.id
+    if (!product) return res.status(404).json({ message: 'Product not found.' })
+    res.json({ message: 'Product deleted.' })
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    res.status(500).json({ message: err.message })
   }
-};
+}
