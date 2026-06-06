@@ -4,7 +4,7 @@ const { errorHandler } = require("../auth");
 
 
 module.exports.createProduct = (req, res) => {
-    const validCategories = ['clothing', 'electronics', 'accessories', 'footwear', 'home', 'sports'];
+    const validCategories = ['clothing', 'electronics', 'accessories', 'footwear', 'home', 'sports', 'toys'];
 
     if (!req.body.name || !req.body.category || !req.body.price) {
         return res.status(400).send({ error: "All fields are required" });
