@@ -4,22 +4,28 @@ const { errorHandler } = require("../auth");
 
 
 module.exports.createProduct = (req, res) => {
-    if(!req.body.name || !req.body.description || !req.body.price){
+    const validCategories = ['clothing', 'electronics', 'accessories', 'footwear', 'home', 'sports'];
+
+    if (!req.body.name || !req.body.category || !req.body.price) {
         return res.status(400).send({ error: "All fields are required" });
+    }
+    if (!validCategories.includes(req.body.category)) {
+        return res.status(400).send({ error: "Invalid category" });
     }
 
     let newProduct = new Product({
         name: req.body.name,
         description: req.body.description,
+        category: req.body.category,
         price: req.body.price
     });
 
     return newProduct.save()
-    .then(result => {
-        result.updated_at = undefined;
-        res.status(201).send({ result });
-    })
-    .catch(error => res.status(500).send({ error: error.message }));
+        .then(result => {
+            const { updated_at, __v, ...product } = result.toObject();
+            res.status(201).send({ result: product });
+        })
+        .catch(error => res.status(500).send({ error: error.message }));
 };
 
 
