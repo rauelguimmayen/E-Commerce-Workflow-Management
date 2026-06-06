@@ -69,25 +69,23 @@ module.exports.getProduct = (req, res) => {
 
 
 module.exports.updateProduct = (req, res) => {
-    let updatedProduct = {
-        name: req.body.name,
-        description: req.body.description,
-        price: req.body.price
-    };
-
-    return Product.findByIdAndUpdate(req.params.productId, updatedProduct)
+  let updatedProduct = {
+    name: req.body.name,
+    description: req.body.description,
+    price: req.body.price,
+    category: req.body.category,
+    image_url: req.body.image_url
+  }
+  return Product.findByIdAndUpdate(req.params.productId, updatedProduct, { new: true, runValidators: true })
     .then(product => {
-        if(product) {
-            res.status(200).send({
-                success: true,
-                message: "Product updated successfully"
-            });
-        } else {
-            res.status(404).send({ error: "Product not found" });
-        }
+      if (product) {
+        res.status(200).send({ success: true, message: 'Product updated successfully' })
+      } else {
+        res.status(404).send({ error: 'Product not found' })
+      }
     })
-    .catch(error => errorHandler(error, req, res));
-};
+    .catch(error => errorHandler(error, req, res))
+}
 
 
 module.exports.archiveProduct = (req, res) => {
