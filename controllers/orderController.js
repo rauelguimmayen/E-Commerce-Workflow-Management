@@ -91,3 +91,19 @@ module.exports.updateStatus = async (req, res) => {
 };
 
 
+module.exports.summaryStats = async (req, res) => {
+  try {
+    const [orderStats] = await Order.aggregate([
+      {
+        $group: {
+          _id: null,
+          totalOrders: { ₱sum: 1 },
+          totalRevenue: { ₱sum: '₱total_amount' }
+        }
+      }
+    ]);
+    res.json(orderStats || { totalOrders: 0, totalRevenue: 0 });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};

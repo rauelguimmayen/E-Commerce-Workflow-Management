@@ -77,7 +77,9 @@ module.exports.updateProduct = (req, res) => {
     price: req.body.price,
     category: req.body.category,
     image_url: req.body.image_url,
-    stock: req.body.stock
+    stock: req.body.stock,
+    isActive: req.body.isActive,  
+    is_featured: req.body.is_featured
   }
   return Product.findByIdAndUpdate(req.params.productId, updatedProduct, { new: true, runValidators: true })
     .then(product => {
