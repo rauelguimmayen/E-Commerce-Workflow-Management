@@ -14,7 +14,7 @@ router.get("/all-orders", verify, verifyAdmin, orderController.getAllOrders);
 // PUT /orders/:id/status  — admin: update status
 router.put("/:id/status", verify, verifyAdmin, orderController.updateStatus);
 
-router.get("/stats/summary", verify, verifyAdmin, orderController.summaryStats);
+/*router.get("/stats/summary", verify, verifyAdmin, orderController.summaryStats);*/
 
 module.exports = router;
 

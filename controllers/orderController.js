@@ -91,7 +91,7 @@ module.exports.updateStatus = async (req, res) => {
 };
 
 
-module.exports.summaryStats = async (req, res) => {
+/*module.exports.summaryStats = async (req, res) => {
   try {
     const [orderStats] = await Order.aggregate([
       {
@@ -106,4 +106,4 @@ module.exports.summaryStats = async (req, res) => {
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
-};
+};*/
