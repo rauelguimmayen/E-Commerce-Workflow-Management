@@ -16,12 +16,13 @@ router.post("/login", userController.loginUser);
 // PATCH /users/update-password
 router.patch("/update-password", verify, userController.updatePassword);
 
+// PUT /users/update-profile
+router.put('/update-profile', verify, userController.updateProfile);
+
 // GET /users/details
-
-// POST /users/details
-
 router.get("/details", verify, userController.getProfile);
 
+// PATCH /users/:id/set-as-admin
 router.patch("/:id/set-as-admin", verify, verifyAdmin, userController.setAsAdmin)
 
 module.exports = router;

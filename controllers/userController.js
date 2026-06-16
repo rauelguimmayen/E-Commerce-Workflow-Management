@@ -154,4 +154,32 @@ module.exports.updatePassword = async (req, res) => {
 
 };
 
+//Update Profile
+module.exports.updateProfile = async (req, res) => {
+  try {
+    const { firstName, lastName, mobileNo } = req.body;
 
+    // Validate mobileNo if provided
+    if (mobileNo && mobileNo.length !== 11) {
+      return res.status(400).json({ message: "Mobile number is invalid" });
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(
+      req.user.id,
+      { firstName, lastName, mobileNo },
+      { new: true }
+    ).select('-password -created_at -updated_at');
+
+    if (!updatedUser) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    return res.status(200).json({
+      message: "Profile updated successfully",
+      updatedUser
+    });
+
+  } catch (err) {
+    return res.status(500).json({ error: err.message });
+  }
+};
