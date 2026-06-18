@@ -28,7 +28,9 @@ mongoose.connect(process.env.MONGODB_STRING);
 
 mongoose.connection.once('open', () => console.log('Now connected to MongoDB Atlas.'))
 
-
+app.get('/js/config.js', (req, res) =>
+  res.type('js').send(`window.GOOGLE_CLIENT_ID="${process.env.GOOGLE_CLIENT_ID || ''}";`)
+);
 
 // ROUTES 
 

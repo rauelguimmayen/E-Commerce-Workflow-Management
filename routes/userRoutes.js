@@ -25,4 +25,7 @@ router.get("/details", verify, userController.getProfile);
 // PATCH /users/:id/set-as-admin
 router.patch("/:id/set-as-admin", verify, verifyAdmin, userController.setAsAdmin)
 
+// POST /users/google
+router.post('/google', userController.googleLogin)
+
 module.exports = router;
