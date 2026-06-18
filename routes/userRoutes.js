@@ -32,16 +32,16 @@ router.get("/google",
 	}
 ));
 
-router.get("/google/callback", 
-	passport.authenticate("google",{
-		failureRedirect: "/users/failed",
-	}),
-	function (req, res){
-		res.redirect("/users/success")
-	}
-)
+router.get('/google/callback',
+  passport.authenticate('google', { failureRedirect: '/users/login' }),
+  (req, res) => {
+    const returnTo = req.session.returnTo || '/';
+    delete req.session.returnTo;
+    res.redirect(returnTo);
+  }
+);
 
-router.get("/failed", (req,res)=>{
+/*router.get("/failed", (req,res)=>{
 	res.send("Failed")
 })
 
@@ -49,6 +49,6 @@ router.get("/success", (req, res) => {
   if (!req.user) return res.redirect("/users/failed");
   const token = signToken(req.user._id);
   res.redirect(`${process.env.FRONTEND_URL}/auth/callback?access=${token}`);
-});
+});*/
 
 module.exports = router;
