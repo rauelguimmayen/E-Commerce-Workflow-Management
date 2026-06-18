@@ -47,7 +47,7 @@ router.get("/failed", (req,res)=>{
 
 router.get("/success", (req, res) => {
   const token = signToken(req.user._id);
-  res.redirect(`${process.env.FRONTEND_URL}/auth/callback?access=${token}`);
+  res.redirect(`${process.env.FRONTEND_URL}/users/google/callback?access=${token}`);
 });
 
 module.exports = router;
