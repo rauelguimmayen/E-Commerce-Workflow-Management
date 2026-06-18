@@ -2,12 +2,13 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
+const session = require("express-session");
 const userRoutes = require("./routes/userRoutes");
 const productRoutes = require("./routes/productRoutes");
 const cartRoutes = require("./routes/cartRoutes");
-
 const orderRoutes = require("./routes/orderRoutes")
-
+const passport = require("passport");
+require("./passport");
 
 // Configurations 
 
@@ -28,9 +29,17 @@ mongoose.connect(process.env.MONGODB_STRING);
 
 mongoose.connection.once('open', () => console.log('Now connected to MongoDB Atlas.'))
 
-app.get('/js/config.js', (req, res) =>
-  res.type('js').send(`window.GOOGLE_CLIENT_ID="${process.env.GOOGLE_CLIENT_ID || ''}";`)
-);
+// setups session middleware
+app.use(session({
+	secret: process.env.GOOGLE_CLIENT_SECRET,
+	resave: false,
+	saveUninitialize: false
+}));
+
+// initialize the passport (starts authentication system)
+app.use(passport.initialize());
+// creates the passport session
+app.use(passport.session());
 
 // ROUTES 
 

@@ -4,7 +4,7 @@ const router = express.Router();
 const userController = require('../controllers/userController');
 
 const { verify, validateEmail, verifyAdmin } = require("../auth");
-
+const passport = require("passport");
 
 
 // POST /users/register
@@ -25,7 +25,29 @@ router.get("/details", verify, userController.getProfile);
 // PATCH /users/:id/set-as-admin
 router.patch("/:id/set-as-admin", verify, verifyAdmin, userController.setAsAdmin)
 
-// POST /users/google
-router.post('/google', userController.googleLogin)
+router.get("/google",
+	passport.authenticate("google", {
+		scope: ["email", "profile"],
+		prompt: "select_account"
+	}
+));
+
+router.get("/google/callback", 
+	passport.authenticate("google",{
+		failureRedirect: "/users/failed",
+	}),
+	function (req, res){
+		res.redirect("/users/success")
+	}
+)
+
+router.get("/failed", (req,res)=>{
+	res.send("Failed")
+})
+
+router.get("/success", (req, res) => {
+  const token = signToken(req.user._id);
+  res.redirect(`${process.env.FRONTEND_URL}/auth/callback?access=${token}`);
+});
 
 module.exports = router;

@@ -2,7 +2,6 @@ const User = require('../models/User');
 const bcrypt = require("bcryptjs");
 const mongoose = require("mongoose");
 const { createAccessToken, errorHandler } = require("../auth");
-const { OAuth2Client } = require('google-auth-library');
 
 // User Registration
 module.exports.registerUser = (req, res) => {
@@ -185,29 +184,3 @@ module.exports.updateProfile = async (req, res) => {
   }
 };
 
-// ── POST /users/google ─────────────────────────────────────────────────────
-module.exports.googleLogin = async (req, res) => {
-  try {
-    const { credential } = req.body;
-    if (!credential) return res.status(400).json({ message: 'Google credential required.' });
-
-    const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
-    const ticket = await client.verifyIdToken({
-      idToken: credential,
-      audience: process.env.GOOGLE_CLIENT_ID
-    });
-    const { sub: googleId, email, name, picture } = ticket.getPayload();
-
-    let user = await User.findOne({ $or: [{ googleId }, { email }] });
-    if (user) {
-      if (!user.googleId) { user.googleId = googleId; user.avatar = user.avatar || picture; await user.save(); }
-    } else {
-      user = await User.create({ full_name: name, email, googleId, avatar: picture });
-    }
-
-    res.json({ token: signToken(user._id), user });
-  } catch (err) {
-    console.error('Google auth error:', err.message);
-    res.status(401).json({ message: 'Google sign-in failed. Please try again.' });
-  }
-};
