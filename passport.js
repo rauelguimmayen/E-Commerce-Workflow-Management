@@ -1,5 +1,6 @@
 // passport.js
 const User = require('./models/User'); // adjust path to your actual model
+const passport = require('passport');
 
 passport.use(new GoogleStrategy({
   clientID: process.env.GOOGLE_CLIENT_ID,
