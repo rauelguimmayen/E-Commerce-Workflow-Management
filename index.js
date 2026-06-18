@@ -13,17 +13,16 @@ require("./passport");
 // Configurations 
 
 require('dotenv').config();
-
+const MongoStore = require('connect-mongo');
 const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 const corsOptions = {
-
-	origin: '*',
-	credentials: true,
-	optionsSuccessStatus: 200
-}
+  origin: process.env.FRONTEND_URL,
+  credentials: true,
+  optionsSuccessStatus: 200
+};
 app.use(cors(corsOptions))
 mongoose.connect(process.env.MONGODB_STRING);
 
@@ -31,9 +30,10 @@ mongoose.connection.once('open', () => console.log('Now connected to MongoDB Atl
 
 // setups session middleware
 app.use(session({
-	secret: process.env.GOOGLE_CLIENT_SECRET,
-	resave: false,
-	saveUninitialize: false
+  secret: process.env.SESSION_SECRET, // use a dedicated secret, not GOOGLE_CLIENT_SECRET
+  resave: false,
+  saveUninitialized: false, // also fixes the typo "saveUninitialize"
+  store: MongoStore.create({ mongoUrl: process.env.MONGODB_STRING })
 }));
 
 // initialize the passport (starts authentication system)
