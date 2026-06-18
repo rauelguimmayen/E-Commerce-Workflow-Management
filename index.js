@@ -13,7 +13,7 @@ require("./passport");
 // Configurations 
 
 require('dotenv').config();
-const MongoStore = require('connect-mongo');
+const { MongoStore } = require('connect-mongo');
 const app = express();
 
 app.use(express.json());
