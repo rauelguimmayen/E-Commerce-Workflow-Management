@@ -6,6 +6,10 @@ const userRoutes = require("./routes/userRoutes");
 const productRoutes = require("./routes/productRoutes");
 const cartRoutes = require("./routes/cartRoutes");
 const orderRoutes = require("./routes/orderRoutes")
+const twoFactorRoutes = require("./routes/twoFactorRoutes");
+const { authenticator } = require('otplib');
+const QRCode = require('qrcode');
+
 
 
 // Configurations 
@@ -31,6 +35,7 @@ app.use("/users", userRoutes);
 app.use("/products", productRoutes);
 app.use("/cart", cartRoutes);
 app.use("/orders", orderRoutes);
+app.use("/2fa", twoFactorRoutes);
 
 if(require.main === module) {
 

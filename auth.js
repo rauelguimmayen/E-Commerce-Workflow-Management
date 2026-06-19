@@ -12,6 +12,15 @@ module.exports.createAccessToken = (user) => {
     return jwt.sign(data, process.env.JWT_SECRET_KEY, {});
 }
 
+// Create Temp Token (issued after password check, before 2FA code is verified)
+module.exports.createTempToken = (user) => {
+    const data = {
+        id: user._id,
+        purpose: '2fa-pending'
+    };
+    return jwt.sign(data, process.env.JWT_SECRET_KEY, { expiresIn: '5m' });
+}
+
 // Verify Token
 module.exports.verify = (req, res, next) => {
     console.log(req.headers.authorization);
@@ -36,6 +45,34 @@ module.exports.verify = (req, res, next) => {
                 console.log("result from verify method " + decodedToken);
                 // decodedToken contains: id, email, isAdmin
                 req.user = decodedToken;
+                next();
+            }
+        })
+    }
+}
+
+// Verify Temp Token (mid-login, before full session exists)
+module.exports.verifyTemp = (req, res, next) => {
+    let token = req.headers.authorization;
+
+    if(typeof token === "undefined") {
+        return res.status(401).send({ auth: "Failed. No Token" });
+    } else {
+        token = token.slice(7, token.length);
+
+        jwt.verify(token, process.env.JWT_SECRET_KEY, function(err, decodedToken) {
+            if(err) {
+                return res.status(403).send({
+                    auth: "Failed",
+                    message: err.message
+                });
+            } else if (decodedToken.purpose !== '2fa-pending') {
+                return res.status(403).send({
+                    auth: "Failed",
+                    message: "Invalid token purpose"
+                });
+            } else {
+                req.tempAuth = decodedToken;
                 next();
             }
         })

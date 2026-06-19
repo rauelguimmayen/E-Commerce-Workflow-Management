@@ -30,7 +30,23 @@ const userSchema = new mongoose.Schema({
         required: [true, 'Mobile Number is Required'],
         minlength: [11, "Mobile number Invalid"],
         maxlength: [11, "Mobile number Invalid"]
-    }    
+    },
+    twoFactorEnabled: {
+        type: Boolean,
+        default: false
+    },
+    twoFactorSecret: {
+        type: String,
+        default: null
+    },
+    twoFactorSecretPending: {
+        type: String,
+        default: null
+    },
+    backupCodes: {
+        type: [String],
+        default: []
+    }
 },
 {
     timestamps: { 

@@ -4,6 +4,8 @@ const router = express.Router();
 const userController = require('../controllers/userController');
 
 const { verify, validateEmail, verifyAdmin } = require("../auth");
+console.log('verify:', typeof verify);
+console.log('updatePassword:', typeof userController.updatePassword);
 
 
 // POST /users/register

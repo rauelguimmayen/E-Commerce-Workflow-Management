@@ -1,7 +1,7 @@
 const User = require('../models/User');
 const bcrypt = require("bcryptjs");
 const mongoose = require("mongoose");
-const { createAccessToken, errorHandler } = require("../auth");
+const { createAccessToken, createTempToken, errorHandler } = require("../auth");
 
 // User Registration
 module.exports.registerUser = (req, res) => {
@@ -51,7 +51,6 @@ module.exports.getProfile = (req, res) => {
 };
 
 // User Login
-// User Login
 module.exports.loginUser = (req, res) => {
 
     if(!req.body.email){
@@ -69,7 +68,16 @@ module.exports.loginUser = (req, res) => {
 
                 const isPasswordCorrect = bcrypt.compareSync(req.body.password, result.password);
 
-                if(isPasswordCorrect) {
+                if (isPasswordCorrect) {
+
+                    if (result.twoFactorEnabled) {
+                        return res.status(200).send({
+                            success: true,
+                            requires2FA: true,
+                            tempToken: createTempToken(result)
+                        });
+                    }
+
                     return res.status(200).send({
                         success: true,
                         message: "User logged in successfully",
