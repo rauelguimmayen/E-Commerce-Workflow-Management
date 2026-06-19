@@ -15,12 +15,11 @@ const app = express();
 
 app.use(express.json());
 
-const corsOptions = {
-
+app.use(cors({
   origin: '*', 
   credentials: true,
-  optionsSuccessStatus: 200
-}
+}));
+
 mongoose.connect(process.env.MONGODB_STRING);
 
 mongoose.connection.once('open', () => console.log('Now connected to MongoDB Atlas.'))
